@@ -4,7 +4,10 @@ import { Vote } from "@/components/Vote";
 import { db } from "@/db";
 
 export default async function SinglePostPage({ params }) {
-  const postId = params.postId;
+  const slugId = params.slugId;
+  console.log("Received slugId:", slugId);
+  const postId = slugId.split("-").pop();
+  console.log("Extracted post ID:", postId);
 
   const { rows: posts } = await db.query(
     `SELECT posts.id, posts.title, posts.body, posts.created_at, users.name, 
@@ -25,15 +28,15 @@ export default async function SinglePostPage({ params }) {
   );
 
   return (
-    <div className="max-w-screen-lg mx-auto pt-4 pr-4">
+    <div className="max-w-screen-lg pt-4 pr-4 mx-auto">
       <div className="flex space-x-6">
         <Vote postId={post.id} votes={post.vote_total} />
         <div className="">
           <h1 className="text-2xl">{post.title}</h1>
-          <p className="text-zinc-400 mb-4">Posted by {post.name}</p>
+          <p className="mb-4 text-zinc-400">Posted by {post.name}</p>
         </div>
       </div>
-      <main className="whitespace-pre-wrap m-4">{post.body}</main>
+      <main className="m-4 whitespace-pre-wrap">{post.body}</main>
 
       <CommentForm postId={post.id} />
       <CommentList postId={post.id} />

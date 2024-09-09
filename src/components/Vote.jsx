@@ -2,6 +2,7 @@ import { db } from "@/db";
 import auth from "../app/middleware";
 import { revalidatePath } from "next/cache";
 import { VoteButtons } from "./VoteButtons";
+import ErrorPage from "@/components/error";
 
 async function getExistingVote(userId, postId) {
   const { rows: existingVotes } = await db.query(
@@ -59,7 +60,7 @@ export async function Vote({ postId, votes }) {
 
   return (
     <>
-      <form className="flex items-center space-x-3 pl-3">
+      <form className="flex items-center pl-3 space-x-3">
         <VoteButtons
           upvote={upvote}
           downvote={downvote}

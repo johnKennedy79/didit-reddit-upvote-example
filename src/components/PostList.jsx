@@ -4,6 +4,9 @@ import { Vote } from "./Vote";
 import { db } from "@/db";
 import { POSTS_PER_PAGE } from "@/config";
 
+function generateSlug(title) {
+  return title.trim().toLowerCase().replace(/\s+/g, "-");
+}
 export async function PostList({ currentPage = 1 }) {
   const { rows: posts } =
     await db.query(`SELECT posts.id, posts.title, posts.body, posts.created_at, users.name, 
@@ -18,16 +21,16 @@ export async function PostList({ currentPage = 1 }) {
 
   return (
     <>
-      <ul className="max-w-screen-lg mx-auto p-4 mb-4">
+      <ul className="max-w-screen-lg p-4 mx-auto mb-4">
         {posts.map((post) => (
           <li
             key={post.id}
-            className=" py-4 flex space-x-6 hover:bg-zinc-200 rounded-lg"
+            className="flex py-4 space-x-6 rounded-lg hover:bg-zinc-200"
           >
             <Vote postId={post.id} votes={post.vote_total} />
             <div>
               <Link
-                href={`/post/${post.id}`}
+                href={`/post/${generateSlug(post.title)}-${post.id}`}
                 className="text-3xl hover:text-pink-500"
               >
                 {post.title}
